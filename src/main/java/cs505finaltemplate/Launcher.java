@@ -29,8 +29,8 @@ public class Launcher {
 
         //startig DB/CEP init
 
-        graphDBEngine = new GraphDBEngine();
-
+        //READ CLASS COMMENTS BEFORE USING
+        //graphDBEngine = new GraphDBEngine();
 
         cepEngine = new CEPEngine();
 
@@ -54,7 +54,6 @@ public class Launcher {
         System.out.println("CEP Started...");
         //end DB/CEP Init
 
-
         //start message collector
         Map<String,String> message_config = new HashMap<>();
         message_config.put("hostname",""); //Fill config for your team in
@@ -65,7 +64,6 @@ public class Launcher {
         topicConnector = new TopicConnector(message_config);
         topicConnector.connect();
         //end message collector
-
 
         //Embedded HTTP initialization
         startServer();
