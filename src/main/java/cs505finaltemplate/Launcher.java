@@ -45,8 +45,9 @@ public class Launcher {
         //This query must be modified.  Currently, it provides the last zip_code and total count
         //You want counts per zip_code, to say another way "grouped by" zip_code
         String queryString = " " +
-                "from testInStream#window.timeBatch(5 sec) " +
+                "from testInStream#window.timeBatch(15 sec) " +
                 "select zip_code, count() as count " +
+                "group by zip_code " +
                 "insert into testOutStream; ";
 
         cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
@@ -56,10 +57,10 @@ public class Launcher {
 
         //start message collector
         Map<String,String> message_config = new HashMap<>();
-        message_config.put("hostname",""); //Fill config for your team in
-        message_config.put("username","");
-        message_config.put("password","");
-        message_config.put("virtualhost","");
+        message_config.put("hostname","128.163.202.50"); //Fill config for your team in
+        message_config.put("username","student");
+        message_config.put("password","student01");
+        message_config.put("virtualhost","16");
 
         topicConnector = new TopicConnector(message_config);
         topicConnector.connect();

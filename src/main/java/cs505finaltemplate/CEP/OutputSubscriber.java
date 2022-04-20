@@ -2,6 +2,7 @@ package cs505finaltemplate.CEP;
 
 import cs505finaltemplate.Launcher;
 import io.siddhi.core.util.transport.InMemoryBroker;
+import java.util.Arrays;
 
 public class OutputSubscriber implements InMemoryBroker.Subscriber {
 
@@ -21,10 +22,14 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
             //You will need to parse output and do other logic,
             //but this sticks the last output value in main
             Launcher.lastCEPOutput = String.valueOf(msg);
+            System.out.println("Last CEP output: " + Launcher.lastCEPOutput);
 
-            //String[] sstr = String.valueOf(msg).split(":");
-            //String[] outval = sstr[2].split("}");
+            String[] sstr = String.valueOf(msg).split(":");
+            String[] outval = sstr[2].split("}");
             //Launcher.accessCount = Long.parseLong(outval[0]);
+
+            System.out.println("outval: " + Arrays.toString(outval));
+            //System.out.println("accessCount: " + String.valueOf(Launcher.accessCount));
 
         } catch(Exception ex) {
             ex.printStackTrace();
