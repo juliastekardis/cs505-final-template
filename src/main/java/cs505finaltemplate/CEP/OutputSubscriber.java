@@ -2,7 +2,7 @@ package cs505finaltemplate.CEP;
 
 import cs505finaltemplate.Launcher;
 import io.siddhi.core.util.transport.InMemoryBroker;
-import java.util.Arrays;
+import java.util.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,6 +27,7 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
             JSONObject jsonObject;
             JSONArray jsonArray;
             // create HashMap from output (current) CEP event
+            Launcher.counts_current_cep.clear();
             try {
                 stringJsonArray = "{ array: " + msg + " }";
                 jsonObject = new JSONObject(stringJsonArray);
@@ -43,6 +44,7 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
             System.out.println("current CEP output: " + Launcher.counts_current_cep);
 
             // create HashMap from last CEP event
+            Launcher.counts_last_cep.clear()
             try {
                 stringJsonArray = "{ array: " + Launcher.lastCEPOutput + " }";
                 jsonObject = new JSONObject(stringJsonArray);
@@ -60,6 +62,18 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
             } catch (Exception e) { }
             System.out.println("Last CEP output: " + Launcher.counts_last_cep);
 
+            // compare current and last hashmaps, add to zipList
+            List<String> zipList = new ArrayList<String>();
+            Launcher.counts_current_cep.forEach((key, value) -> {
+                if (Launcher.counts_last_cep.containsKey(key)) {
+                    if (value >= Launcher.counts_last_cep.get(key) * 2) {
+                        zipList.add(key);
+                    }
+                }
+            });
+            System.out.println("zipList: " + zipList);
+
+            // update last CEP
             Launcher.lastCEPOutput = String.valueOf(msg);
             
             System.out.println("");
