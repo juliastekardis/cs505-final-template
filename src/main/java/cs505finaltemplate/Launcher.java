@@ -23,7 +23,8 @@ public class Launcher {
     public static final int WEB_PORT = 8082;
 
     public static String lastCEPOutput = "{}";
-    public static HashMap<String, String> counts_by_zip = new HashMap<>();
+    public static HashMap<String, Integer> counts_current_cep = new HashMap<>();
+    public static HashMap<String, Integer> counts_last_cep = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
 

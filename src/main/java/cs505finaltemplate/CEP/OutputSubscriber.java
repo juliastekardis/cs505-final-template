@@ -19,22 +19,46 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
 
         try {
             System.out.println("OUTPUT CEP EVENT: " + msg);
-            //System.out.println("msg[0]: " + msg[0]);
-            
-            //Launcher.counts_by_zip.put(jsonObject.getJSONObject("event"))
-
             //You will need to parse output and do other logic,
             //but this sticks the last output value in main
             System.out.println("Last CEP output: " + Launcher.lastCEPOutput);
 
-            String stringJsonArray = "{ array: " + msg + " }";
-            JSONObject jsonObject = new JSONObject(stringJsonArray);
-            JSONArray jsonArray = jsonObject.getJSONArray("array");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject row = jsonArray.getJSONObject(i);
-                System.out.println("jsonArrat.getS: " + row.toString());
+            String stringJsonArray;
+            JSONObject jsonObject;
+            JSONArray jsonArray;
+            // create HashMap from output (current) CEP event
+            try {
+                stringJsonArray = "{ array: " + msg + " }";
+                jsonObject = new JSONObject(stringJsonArray);
+                jsonArray = jsonObject.getJSONArray("array");
+            } catch (Exception e) {
+                stringJsonArray = "{ array: [" + msg + "] }";
+                jsonObject = new JSONObject(stringJsonArray);
+                jsonArray = jsonObject.getJSONArray("array");
             }
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject row = jsonArray.getJSONObject(i).getJSONObject("event"); 
+                Launcher.counts_current_cep.put(row.getString("zip_code"), (int)row.getDouble("count"));
+            }
+            System.out.println("current CEP output: " + Launcher.counts_current_cep);
 
+            // create HashMap from last CEP event
+            try {
+                stringJsonArray = "{ array: " + Launcher.lastCEPOutput + " }";
+                jsonObject = new JSONObject(stringJsonArray);
+                jsonArray = jsonObject.getJSONArray("array");
+            } catch (Exception e) {
+                stringJsonArray = "{ array: [" + Launcher.lastCEPOutput + "] }";
+                jsonObject = new JSONObject(stringJsonArray);
+                jsonArray = jsonObject.getJSONArray("array");
+            }
+            try {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject row = jsonArray.getJSONObject(i).getJSONObject("event"); 
+                    Launcher.counts_last_cep.put(row.getString("zip_code"), (int)row.getDouble("count"));
+                }
+            } catch (Exception e) { }
+            System.out.println("Last CEP output: " + Launcher.counts_last_cep);
 
             Launcher.lastCEPOutput = String.valueOf(msg);
             
