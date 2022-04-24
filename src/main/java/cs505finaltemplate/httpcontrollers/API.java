@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.*;
 
 @Path("/api")
 public class API {
@@ -36,8 +37,8 @@ public class API {
         try {
             System.out.println("WHAT");
             Map<String,String> responseMap = new HashMap<>();
-            responseMap.put("team_name", "templateTeam");
-            responseMap.put("Team_members_sids", "[0]");
+            responseMap.put("team_name", "Julia's Team");
+            responseMap.put("Team_members_sids", "[12229023]");
             responseMap.put("app_status_code","0");
 
             responseString = gson.toJson(responseMap);
@@ -79,5 +80,52 @@ public class API {
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
 
+    @GET
+    @Path("/zipalertlist")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getZipList(@HeaderParam("X-Auth-API-Key") String authKey) {
+        String responseString = "{}";
+        try {
+
+            //generate a response
+            Map<String,List> responseMap = new HashMap<>();
+            responseMap.put("zipList",Launcher.zipList);
+            responseString = gson.toJson(responseMap);
+
+        } catch (Exception ex) {
+
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/alertlist")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAlertList(@HeaderParam("X-Auth-API-Key") String authKey) {
+        String responseString = "{}";
+        try {
+
+            //generate a response
+            Map<String,Integer> responseMap = new HashMap<>();
+            responseMap.put("state_status",Launcher.state_status);
+            responseString = gson.toJson(responseMap);
+
+        } catch (Exception ex) {
+
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
 
 }
