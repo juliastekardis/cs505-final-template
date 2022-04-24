@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sun Apr 24 15:43:25 EDT 2022:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0180-5d19-ac02-000003274c88 
+on database directory memory:/home/jmst323/cs505/cs505-final-template/myDatabase with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@55054057 
+Loaded from file:/home/jmst323/cs505/cs505-final-template/target/cs505-final-template-1.0-SNAPSHOT.jar
+java.vendor=Ubuntu
+java.runtime.version=11.0.13+8-Ubuntu-0ubuntu1.20.04
+user.dir=/home/jmst323/cs505/cs505-final-template
+os.name=Linux
+os.arch=amd64
+os.version=5.4.0-92-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

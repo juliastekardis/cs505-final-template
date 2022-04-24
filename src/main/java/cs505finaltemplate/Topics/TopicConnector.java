@@ -139,6 +139,9 @@ public class TopicConnector {
                     String patient_mrn = hospitalData.get("patient_mrn");
                     int patient_status = Integer.parseInt(hospitalData.get("patient_status"));
                     //do something with each each record.
+
+                    String insertQuery = "INSERT INTO hospital_data VALUES ('" + hospital_id + "', '" + patient_mrn + "', '" + patient_status + ")";
+                    Launcher.embeddedEngine.executeUpdate(insertQuery);
                 }
 
             };
