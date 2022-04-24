@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.*;
 
 
 public class Launcher {
@@ -25,6 +26,9 @@ public class Launcher {
     public static String lastCEPOutput = "{}";
     public static HashMap<String, Integer> counts_current_cep = new HashMap<>();
     public static HashMap<String, Integer> counts_last_cep = new HashMap<>();
+    public static List<String> zipList = new ArrayList<String>();
+    //public static List<String> zipList = Arrays.asList("40508", "40511", "40504", "40059", "42101");
+    public static Integer state_status;
 
     public static void main(String[] args) throws IOException {
 

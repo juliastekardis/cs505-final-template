@@ -18,10 +18,11 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
     public void onMessage(Object msg) {
 
         try {
-            System.out.println("OUTPUT CEP EVENT: " + msg);
+            Launcher.zipList.clear();
+            //System.out.println("OUTPUT CEP EVENT: " + msg);
             //You will need to parse output and do other logic,
             //but this sticks the last output value in main
-            System.out.println("Last CEP output: " + Launcher.lastCEPOutput);
+            //System.out.println("Last CEP output: " + Launcher.lastCEPOutput);
 
             String stringJsonArray;
             JSONObject jsonObject;
@@ -44,7 +45,7 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
             System.out.println("current CEP output: " + Launcher.counts_current_cep);
 
             // create HashMap from last CEP event
-            Launcher.counts_last_cep.clear()
+            Launcher.counts_last_cep.clear();
             try {
                 stringJsonArray = "{ array: " + Launcher.lastCEPOutput + " }";
                 jsonObject = new JSONObject(stringJsonArray);
@@ -63,33 +64,32 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
             System.out.println("Last CEP output: " + Launcher.counts_last_cep);
 
             // compare current and last hashmaps, add to zipList
-            List<String> zipList = new ArrayList<String>();
+            
             Launcher.counts_current_cep.forEach((key, value) -> {
                 if (Launcher.counts_last_cep.containsKey(key)) {
                     if (value >= Launcher.counts_last_cep.get(key) * 2) {
-                        zipList.add(key);
+                        Launcher.zipList.add(key);
                     }
                 }
             });
-            System.out.println("zipList: " + zipList);
+            
+            //System.out.println("zipList: " + Launcher.zipList);
+
+            // alert list
+            if (Launcher.zipList.size() >= 5) {
+                Launcher.state_status = 1;
+            } else {
+                Launcher.state_status = 0;
+            }
 
             // update last CEP
             Launcher.lastCEPOutput = String.valueOf(msg);
             
             System.out.println("");
-
-            String[] sstr = String.valueOf(msg).split(":");
-            String[] outval = sstr[2].split("}");
-            //Launcher.accessCount = Long.parseLong(outval[0]);
-
-            //System.out.println("sstr: " + Arrays.toString(sstr));
-            //System.out.println("outval: " + Arrays.toString(outval));
-            //System.out.println("accessCount: " + String.valueOf(Launcher.accessCount));
-
+            
         } catch(Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
     @Override
