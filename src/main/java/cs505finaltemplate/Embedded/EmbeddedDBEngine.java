@@ -152,7 +152,8 @@ public class EmbeddedDBEngine {
             Connection conn = ds.getConnection();
             try {
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(stmtString);
+                System.out.println("query: " + stmtString);
+                result = stmt.executeUpdate(stmtString);
                 stmt.close();
             } catch (Exception e) {
 
@@ -236,7 +237,7 @@ public class EmbeddedDBEngine {
         return exist;
     }
 
-    public List<Map<String,String>> getAccessLogs() {
+    public List<Map<String,String>> getAccessLogs(String queryString) {
         List<Map<String,String>> accessMapList = null;
         try {
 
@@ -244,10 +245,10 @@ public class EmbeddedDBEngine {
 
             Type type = new TypeToken<Map<String, String>>(){}.getType();
 
-            String queryString = null;
+            //String queryString = null;
 
             //fill in the query
-            queryString = "SELECT * FROM accesslog";
+            //queryString = "SELECT * FROM accesslog";
 
             try(Connection conn = ds.getConnection()) {
                 try (Statement stmt = conn.createStatement()) {

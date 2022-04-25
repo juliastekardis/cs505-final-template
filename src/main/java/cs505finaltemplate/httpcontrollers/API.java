@@ -6,6 +6,7 @@ import cs505finaltemplate.Launcher;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -127,5 +128,40 @@ public class API {
         }
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
+
+    @GET
+    @Path("/getpatientstatus/{hospital_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPatientStatusByHospital(@PathParam("hospital_id") String hospital_id) {
+        String queryString = null;
+        String responseString = "{}";
+        //fill in the query
+        queryString = "SELECT COUNT(*) AS in_patient_count WHERE hospital_mrn = " + hospital_id;
+        //"   SUM(CASE WHEN B.vaccination_id is not null THEN 1 ELSE 0 END) AS in_patient_count_vax, " +
+        //"   in_patient_count_vaccinated / in_patient_count AS in_patient_vax";
+
+        List<Map<String,String>> accessMapList = Launcher.embeddedEngine.getAccessLogs(queryString);
+        responseString = gson.toJson(accessMapList);
+
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+        /*
+        try {
+
+            //generate a response
+            Map<String,Integer> responseMap = new HashMap<>();
+            responseMap.put("state_status",Launcher.state_status);
+            responseString = gson.toJson(responseMap);
+
+        } catch (Exception ex) {
+
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }*/
 
 }
