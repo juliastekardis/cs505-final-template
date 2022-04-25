@@ -127,7 +127,7 @@ public class TopicConnector {
             System.out.println(" [*] Hospital List Waiting for messages. To exit press CTRL+C");
 
             String message = "[{\"hospital_id\": 1, \"patient_name\": \"Julia\", \"patient_mrn\": \"a\", \"patient_status\": 1}, " + 
-            "{\"hospital_id\": 2, \"patient_name\": \"Wyatt\", \"patient_mrn\": \"b\", \"patient_status\": 1}]";
+            "{\"hospital_id\": 1, \"patient_name\": \"Wyatt\", \"patient_mrn\": \"b\", \"patient_status\": 1}]";
             System.out.println("message: " + message);
             List<Map<String,String>> incomingList = gson.fromJson(message, typeOfListMap);
                 for (Map<String,String> hospitalData : incomingList) {
@@ -188,6 +188,21 @@ public class TopicConnector {
 
             System.out.println(" [*] Vax List Waiting for messages. To exit press CTRL+C");
 
+            String message = "[{\"vaccination_id\": 100, \"patient_name\": \"Julia\", \"patient_mrn\": \"a\"}]"; 
+            //"{\"vaccination_id\": 101, \"patient_name\": \"Wyatt\", \"patient_mrn\": \"b\"}]";
+            System.out.println("message: " + message);
+            List<Map<String,String>> incomingList = gson.fromJson(message, typeOfListMap);
+                for (Map<String,String> vaxData : incomingList) {
+                    int vaccination_id = Integer.parseInt(vaxData.get("vaccination_id"));
+                    String patient_name = vaxData.get("patient_name");
+                    String patient_mrn = vaxData.get("patient_mrn");
+                    //do something with each each record.
+
+                    String insertQuery = "INSERT INTO vax_data VALUES ('" + patient_mrn + "', " + vaccination_id + ")";
+                    Launcher.embeddedEngine.executeUpdate(insertQuery);
+                }
+
+            /*
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
                 String message = new String(delivery.getBody(), "UTF-8");
@@ -205,7 +220,7 @@ public class TopicConnector {
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
             });
-
+            */
         } catch (Exception ex) {
             System.out.println("vaxListChannel Error: " + ex.getMessage());
             ex.printStackTrace();

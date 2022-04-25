@@ -124,7 +124,7 @@ public class EmbeddedDBEngine {
         createRNode = "CREATE TABLE vax_data" +
                 "(" +
                 "   patient_mrn varchar(255), " +
-                "   vaccination_id smallint" +
+                "   vaccination_id int" +
                 ")";
 
         try {
@@ -238,7 +238,7 @@ public class EmbeddedDBEngine {
         return exist;
     }
 
-    public List<Map<String,String>> getAccessLogs(String queryString) {
+    public List<Map<String,String>> getInPatientData(String queryString) {
         List<Map<String,String>> accessMapList = null;
         try {
 
@@ -259,7 +259,7 @@ public class EmbeddedDBEngine {
                         while (rs.next()) {
                             Map<String, String> accessMap = new HashMap<>();
                             accessMap.put("in_patient_count", rs.getString("in_patient_count"));
-                            //accessMap.put("access_ts", rs.getString("access_ts"));
+                            accessMap.put("in_patient_vax", rs.getString("in_patient_vax"));
                             accessMapList.add(accessMap);
                         }
 

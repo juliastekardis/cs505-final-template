@@ -136,13 +136,18 @@ public class API {
         String queryString = null;
         String responseString = "{}";
         //fill in the query
-        queryString = "SELECT COUNT(*) AS in_patient_count " +
-        "   FROM hospital_data " +
-        "   WHERE hospital_id = " + hospital_id;
+        queryString = "SELECT COUNT(*) AS in_patient_count, " +
+        //"   SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) AS in_patient_count_vax, " +
+        "   CAST(SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) AS FLOAT) / CAST(COUNT(*) AS FLOAT) AS in_patient_vax" +
+        "   FROM hospital_data A" +
+        "   LEFT JOIN vax_data B" +
+        "   ON A.patient_mrn = B.patient_mrn" +
+        "   WHERE A.hospital_id = " + hospital_id + 
+        "   AND A.patient_status = 1";
         //"   SUM(CASE WHEN B.vaccination_id is not null THEN 1 ELSE 0 END) AS in_patient_count_vax, " +
         //"   in_patient_count_vaccinated / in_patient_count AS in_patient_vax";
 
-        List<Map<String,String>> accessMapList = Launcher.embeddedEngine.getAccessLogs(queryString);
+        List<Map<String,String>> accessMapList = Launcher.embeddedEngine.getInPatientData(queryString);
         responseString = gson.toJson(accessMapList);
 
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
