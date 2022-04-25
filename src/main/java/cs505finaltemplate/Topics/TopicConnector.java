@@ -126,11 +126,28 @@ public class TopicConnector {
 
             System.out.println(" [*] Hospital List Waiting for messages. To exit press CTRL+C");
 
+            String message = "[{\"hospital_id\": 1, \"patient_name\": \"Julia\", \"patient_mrn\": \"a\", \"patient_status\": 1}, " + 
+            "{\"hospital_id\": 2, \"patient_name\": \"Wyatt\", \"patient_mrn\": \"b\", \"patient_status\": 1}]";
+            System.out.println("message: " + message);
+            List<Map<String,String>> incomingList = gson.fromJson(message, typeOfListMap);
+                for (Map<String,String> hospitalData : incomingList) {
+                    int hospital_id = Integer.parseInt(hospitalData.get("hospital_id"));
+                    String patient_name = hospitalData.get("patient_name");
+                    String patient_mrn = hospitalData.get("patient_mrn");
+                    int patient_status = Integer.parseInt(hospitalData.get("patient_status"));
+                    //do something with each each record.
+
+                    String insertQuery = "INSERT INTO hospital_data VALUES (" + hospital_id + ", '" + patient_mrn + "', " + patient_status + ")";
+                    Launcher.embeddedEngine.executeUpdate(insertQuery);
+                }
+
+            /*
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
                 //new message
-                String message = new String(delivery.getBody(), "UTF-8");
-
+                //String message = new String(delivery.getBody(), "UTF-8");
+                //String message = "[{\"hospital_id\": 1, \"patient_name\": \"Julia\", \"patient_mrn\": \"a\", \"patient_status\": 1}]";
+                //System.out.println("message: " + message);
                 //convert string to class
                 List<Map<String,String>> incomingList = gson.fromJson(message, typeOfListMap);
                 for (Map<String,String> hospitalData : incomingList) {
@@ -145,9 +162,10 @@ public class TopicConnector {
                 }
 
             };
-
+            
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
             });
+            */
 
         } catch (Exception ex) {
             System.out.println("hospitalListChannel Error: " + ex.getMessage());

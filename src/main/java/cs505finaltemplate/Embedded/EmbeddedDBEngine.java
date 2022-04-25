@@ -123,7 +123,8 @@ public class EmbeddedDBEngine {
 
         createRNode = "CREATE TABLE vax_data" +
                 "(" +
-                "   patient_mrn varchar(255)" +
+                "   patient_mrn varchar(255), " +
+                "   vaccination_id smallint" +
                 ")";
 
         try {
@@ -257,8 +258,8 @@ public class EmbeddedDBEngine {
 
                         while (rs.next()) {
                             Map<String, String> accessMap = new HashMap<>();
-                            accessMap.put("remote_ip", rs.getString("remote_ip"));
-                            accessMap.put("access_ts", rs.getString("access_ts"));
+                            accessMap.put("in_patient_count", rs.getString("in_patient_count"));
+                            //accessMap.put("access_ts", rs.getString("access_ts"));
                             accessMapList.add(accessMap);
                         }
 

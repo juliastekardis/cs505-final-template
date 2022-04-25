@@ -132,11 +132,13 @@ public class API {
     @GET
     @Path("/getpatientstatus/{hospital_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPatientStatusByHospital(@PathParam("hospital_id") String hospital_id) {
+    public Response getPatientStatusByHospital(@PathParam("hospital_id") Integer hospital_id) {
         String queryString = null;
         String responseString = "{}";
         //fill in the query
-        queryString = "SELECT COUNT(*) AS in_patient_count WHERE hospital_mrn = " + hospital_id;
+        queryString = "SELECT COUNT(*) AS in_patient_count " +
+        "   FROM hospital_data " +
+        "   WHERE hospital_id = " + hospital_id;
         //"   SUM(CASE WHEN B.vaccination_id is not null THEN 1 ELSE 0 END) AS in_patient_count_vax, " +
         //"   in_patient_count_vaccinated / in_patient_count AS in_patient_vax";
 
