@@ -141,7 +141,7 @@ public class API {
 
         // in-patient query
         inPatientQueryString = "SELECT COUNT(*) AS in_patient_count, " +
-        "   CAST(CASE WHEN COUNT(*) > 0  THEN SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) ELSE 0 END AS FLOAT) / CAST(CASE WHEN COUNT(*) > 0 THEN COUNT(*) ELSE 1 END AS FLOAT) AS in_patient_vax" +
+        "   CAST(CAST(CASE WHEN COUNT(*) > 0  THEN SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) ELSE 0 END AS DECIMAL) / CAST(CASE WHEN COUNT(*) > 0 THEN COUNT(*) ELSE 1 END AS DECIMAL) AS DECIMAL(3,2)) AS in_patient_vax" +
         "   FROM hospital_data A" +
         "   LEFT JOIN vax_data B" +
         "   ON A.patient_mrn = B.patient_mrn" +
@@ -150,7 +150,7 @@ public class API {
 
         // ICU query
         ICUQueryString = "SELECT COUNT(*) AS icu_patient_count, " +
-        "   CAST(CASE WHEN COUNT(*) > 0  THEN SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) ELSE 0 END AS FLOAT) / CAST(CASE WHEN COUNT(*) > 0 THEN COUNT(*) ELSE 1 END AS FLOAT) AS icu_patient_vax" +
+        "   CAST(CAST(CASE WHEN COUNT(*) > 0  THEN SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) ELSE 0 END AS DECIMAL) / CAST(CASE WHEN COUNT(*) > 0 THEN COUNT(*) ELSE 1 END AS DECIMAL) AS DECIMAL(3,2)) AS icu_patient_vax" +
         "   FROM hospital_data A" +
         "   LEFT JOIN vax_data B" +
         "   ON A.patient_mrn = B.patient_mrn" +
@@ -159,7 +159,7 @@ public class API {
 
         // Ventilator query
         ventilatorQueryString = "SELECT COUNT(*) AS patient_vent_count, " +
-        "   CAST(CASE WHEN COUNT(*) > 0  THEN SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) ELSE 0 END AS FLOAT) / CAST(CASE WHEN COUNT(*) > 0 THEN COUNT(*) ELSE 1 END AS FLOAT) AS patient_vent_vax" +
+        "   CAST(CAST(CASE WHEN COUNT(*) > 0  THEN SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) ELSE 0 END AS DECIMAL) / CAST(CASE WHEN COUNT(*) > 0 THEN COUNT(*) ELSE 1 END AS DECIMAL) AS DECIMAL(3,2)) AS patient_vent_vax" +
         "   FROM hospital_data A" +
         "   LEFT JOIN vax_data B" +
         "   ON A.patient_mrn = B.patient_mrn" +
@@ -172,22 +172,44 @@ public class API {
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
 
-        /*
-        try {
+    @GET
+    @Path("/getpatientstatus")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPatientStatus(@HeaderParam("X-Auth-API-Key") String authKey) {
+        
+        String inPatientQueryString = null;
+        String ICUQueryString = null;
+        String ventilatorQueryString = null;
+        String responseString = "{}";
+        //fill in the query
 
-            //generate a response
-            Map<String,Integer> responseMap = new HashMap<>();
-            responseMap.put("state_status",Launcher.state_status);
-            responseString = gson.toJson(responseMap);
+        // in-patient query
+        inPatientQueryString = "SELECT COUNT(*) AS in_patient_count, " +
+        "   CAST(CAST(CASE WHEN COUNT(*) > 0  THEN SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) ELSE 0 END AS DECIMAL) / CAST(CASE WHEN COUNT(*) > 0 THEN COUNT(*) ELSE 1 END AS DECIMAL) AS DECIMAL(3,2)) AS in_patient_vax" +
+        "   FROM hospital_data A" +
+        "   LEFT JOIN vax_data B" +
+        "   ON A.patient_mrn = B.patient_mrn" +
+        "   WHERE A.patient_status = 1";
 
-        } catch (Exception ex) {
+        // ICU query
+        ICUQueryString = "SELECT COUNT(*) AS icu_patient_count, " +
+        "   CAST(CAST(CASE WHEN COUNT(*) > 0  THEN SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) ELSE 0 END AS DECIMAL) / CAST(CASE WHEN COUNT(*) > 0 THEN COUNT(*) ELSE 1 END AS DECIMAL) AS DECIMAL(3,2)) AS icu_patient_vax" +
+        "   FROM hospital_data A" +
+        "   LEFT JOIN vax_data B" +
+        "   ON A.patient_mrn = B.patient_mrn" +
+        "   WHERE A.patient_status = 2";
 
-            StringWriter sw = new StringWriter();
-            ex.printStackTrace(new PrintWriter(sw));
-            String exceptionAsString = sw.toString();
-            ex.printStackTrace();
+        // Ventilator query
+        ventilatorQueryString = "SELECT COUNT(*) AS patient_vent_count, " +
+        "   CAST(CAST(CASE WHEN COUNT(*) > 0  THEN SUM(CASE WHEN B.vaccination_id is not null then 1 ELSE 0 END) ELSE 0 END AS DECIMAL) / CAST(CASE WHEN COUNT(*) > 0 THEN COUNT(*) ELSE 1 END AS DECIMAL) AS DECIMAL(3,2)) AS patient_vent_vax" +
+        "   FROM hospital_data A" +
+        "   LEFT JOIN vax_data B" +
+        "   ON A.patient_mrn = B.patient_mrn" +
+        "   WHERE A.patient_status = 3";
 
-            return Response.status(500).entity(exceptionAsString).build();
-        }*/
-
+        List<Map<String,String>> accessMapList = Launcher.embeddedEngine.getPatientData(inPatientQueryString, ICUQueryString, ventilatorQueryString);
+        responseString = gson.toJson(accessMapList);
+        responseString = responseString.replace("},{", ",");
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
 }
