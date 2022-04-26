@@ -126,7 +126,6 @@ public class TopicConnector {
                     //do something with each each record.
 
                     String insertQuery = "INSERT INTO hospital_data VALUES (" + hospital_id + ", '" + patient_mrn + "', " + patient_status + ")";
-                    System.out.println(insertQuery);
                     Launcher.embeddedEngine.executeUpdate(insertQuery);
                 }
 
@@ -166,7 +165,6 @@ public class TopicConnector {
                     String patient_mrn = vaxData.get("patient_mrn");
                     //do something with each each record.
                     String insertQuery = "INSERT INTO vax_data VALUES ('" + patient_mrn + "', " + vaccination_id + ")";
-                    System.out.println(insertQuery);
                     Launcher.embeddedEngine.executeUpdate(insertQuery);
                 }
 
