@@ -153,7 +153,6 @@ public class EmbeddedDBEngine {
             Connection conn = ds.getConnection();
             try {
                 Statement stmt = conn.createStatement();
-                System.out.println("query: " + stmtString);
                 result = stmt.executeUpdate(stmtString);
                 stmt.close();
             } catch (Exception e) {
@@ -238,7 +237,7 @@ public class EmbeddedDBEngine {
         return exist;
     }
 
-    public List<Map<String,String>> getInPatientData(String queryString) {
+    public List<Map<String,String>> getPatientData(String inPatientQueryString, String ICUQueryString, String ventilatorQueryString) {
         List<Map<String,String>> accessMapList = null;
         try {
 
@@ -254,12 +253,32 @@ public class EmbeddedDBEngine {
             try(Connection conn = ds.getConnection()) {
                 try (Statement stmt = conn.createStatement()) {
 
-                    try(ResultSet rs = stmt.executeQuery(queryString)) {
+                    try(ResultSet rs = stmt.executeQuery(inPatientQueryString)) {
 
                         while (rs.next()) {
                             Map<String, String> accessMap = new HashMap<>();
                             accessMap.put("in_patient_count", rs.getString("in_patient_count"));
                             accessMap.put("in_patient_vax", rs.getString("in_patient_vax"));
+                            accessMapList.add(accessMap);
+                        }
+
+                    }
+                    try(ResultSet rs = stmt.executeQuery(ICUQueryString)) {
+
+                        while (rs.next()) {
+                            Map<String, String> accessMap = new HashMap<>();
+                            accessMap.put("icu_patient_count", rs.getString("icu_patient_count"));
+                            accessMap.put("icu_patient_vax", rs.getString("icu_patient_vax"));
+                            accessMapList.add(accessMap);
+                        }
+
+                    }
+                    try(ResultSet rs = stmt.executeQuery(ventilatorQueryString)) {
+
+                        while (rs.next()) {
+                            Map<String, String> accessMap = new HashMap<>();
+                            accessMap.put("patient_vent_count", rs.getString("patient_vent_count"));
+                            accessMap.put("patient_vent_vax", rs.getString("patient_vent_vax"));
                             accessMapList.add(accessMap);
                         }
 
@@ -273,5 +292,4 @@ public class EmbeddedDBEngine {
 
         return accessMapList;
     }
-
 }
