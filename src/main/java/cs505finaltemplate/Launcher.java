@@ -3,6 +3,7 @@ package cs505finaltemplate;
 import cs505finaltemplate.CEP.CEPEngine;
 import cs505finaltemplate.Topics.TopicConnector;
 import cs505finaltemplate.graphDB.GraphDBEngine;
+import cs505finaltemplate.Embedded.EmbeddedDBEngine;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -20,6 +21,7 @@ public class Launcher {
     public static GraphDBEngine graphDBEngine;
     public static String inputStreamName;
     public static CEPEngine cepEngine;
+    public static EmbeddedDBEngine embeddedEngine;
     public static TopicConnector topicConnector;
     public static final int WEB_PORT = 8082;
 
@@ -37,6 +39,8 @@ public class Launcher {
 
         //READ CLASS COMMENTS BEFORE USING
         graphDBEngine = new GraphDBEngine();
+
+        embeddedEngine = new EmbeddedDBEngine();
 
         cepEngine = new CEPEngine();
 

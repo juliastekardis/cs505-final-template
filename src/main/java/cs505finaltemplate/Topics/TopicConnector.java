@@ -68,7 +68,7 @@ public class TopicConnector {
             channel.queueBind(queueName, topicName, "#");
 
 
-            System.out.println(" [*] Paitent List Waiting for messages. To exit press CTRL+C");
+            System.out.println(" [*] Patient List Waiting for messages. To exit press CTRL+C");
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
@@ -82,23 +82,11 @@ public class TopicConnector {
                     Map<String,String> zip_entry = new HashMap<>();
                     zip_entry.put("zip_code",String.valueOf(testingData.patient_zipcode));
                     String testInput = gson.toJson(zip_entry);
-                    //uncomment for debug
-                    //System.out.println("testInput: " + testInput);
 
                     //insert into CEP
                     Launcher.cepEngine.input("testInStream",testInput);
 
                     //do something else with each record
-                    /*
-                    System.out.println("*Java Class*");
-                    System.out.println("\ttesting_id = " + testingData.testing_id);
-                    System.out.println("\tpatient_name = " + testingData.patient_name);
-                    System.out.println("\tpatient_mrn = " + testingData.patient_mrn);
-                    System.out.println("\tpatient_zipcode = " + testingData.patient_zipcode);
-                    System.out.println("\tpatient_status = " + testingData.patient_status);
-                    System.out.println("\tcontact_list = " + testingData.contact_list);
-                    System.out.println("\tevent_list = " + testingData.event_list);
-                     */
                 }
 
             };
@@ -125,12 +113,9 @@ public class TopicConnector {
             channel.queueBind(queueName, topicName, "#");
 
             System.out.println(" [*] Hospital List Waiting for messages. To exit press CTRL+C");
-
+            
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-
-                //new message
                 String message = new String(delivery.getBody(), "UTF-8");
-
                 //convert string to class
                 List<Map<String,String>> incomingList = gson.fromJson(message, typeOfListMap);
                 for (Map<String,String> hospitalData : incomingList) {
@@ -139,13 +124,15 @@ public class TopicConnector {
                     String patient_mrn = hospitalData.get("patient_mrn");
                     int patient_status = Integer.parseInt(hospitalData.get("patient_status"));
                     //do something with each each record.
+
+                    String insertQuery = "INSERT INTO hospital_data VALUES (" + hospital_id + ", '" + patient_mrn + "', " + patient_status + ")";
+                    Launcher.embeddedEngine.executeUpdate(insertQuery);
                 }
 
             };
-
+            
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
             });
-
         } catch (Exception ex) {
             System.out.println("hospitalListChannel Error: " + ex.getMessage());
             ex.printStackTrace();
@@ -164,9 +151,8 @@ public class TopicConnector {
 
             channel.queueBind(queueName, topicName, "#");
 
-
             System.out.println(" [*] Vax List Waiting for messages. To exit press CTRL+C");
-
+            
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
                 String message = new String(delivery.getBody(), "UTF-8");
@@ -178,13 +164,14 @@ public class TopicConnector {
                     String patient_name = vaxData.get("patient_name");
                     String patient_mrn = vaxData.get("patient_mrn");
                     //do something with each each record.
+                    String insertQuery = "INSERT INTO vax_data VALUES ('" + patient_mrn + "', " + vaccination_id + ")";
+                    Launcher.embeddedEngine.executeUpdate(insertQuery);
                 }
 
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
             });
-
         } catch (Exception ex) {
             System.out.println("vaxListChannel Error: " + ex.getMessage());
             ex.printStackTrace();
