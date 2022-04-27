@@ -38,7 +38,7 @@ public class Launcher {
         //startig DB/CEP init
 
         //READ CLASS COMMENTS BEFORE USING
-        graphDBEngine = new GraphDBEngine();
+        //graphDBEngine = new GraphDBEngine();
 
         embeddedEngine = new EmbeddedDBEngine();
 

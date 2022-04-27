@@ -212,4 +212,32 @@ public class API {
         responseString = responseString.replace("},{", ",");
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
+
+    @GET
+    @Path("/getconfirmedcontacts/{mrn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConfirmedContacts(@PathParam("mrn") String patient_mrn) {
+        
+        String responseString = "{}";
+        String queryString = "SELECT contact_mrn FROM contacts WHERE patient_mrn = '" + patient_mrn + "'";
+        
+        try {
+            List<Map<String,String>> accessMapList = Launcher.embeddedEngine.getContactList(queryString);
+            //generate a response
+            responseString = gson.toJson(accessMapList);
+            //Map<String,Integer> responseMap = new HashMap<>();
+            //responseMap.put("state_status",Launcher.state_status);
+            //responseString = gson.toJson(responseMap);
+
+        } catch (Exception ex) {
+
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
 }

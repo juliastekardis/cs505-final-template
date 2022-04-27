@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class EmbeddedDBEngine {
@@ -136,6 +137,22 @@ public class EmbeddedDBEngine {
         } catch(Exception ex) {
             ex.printStackTrace();
         }
+
+        createRNode = "CREATE TABLE contacts" +
+                "(" +
+                "   patient_mrn varchar(255), " +
+                "   contact_mrn varchar(255)" +
+                ")";
+
+        try {
+            try(Connection conn = ds.getConnection()) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate(createRNode);
+                }
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     void delete(File f) throws IOException {
@@ -149,6 +166,7 @@ public class EmbeddedDBEngine {
 
     public int executeUpdate(String stmtString) {
         int result = -1;
+        System.out.println(stmtString);
         try {
             Connection conn = ds.getConnection();
             try {
@@ -292,4 +310,43 @@ public class EmbeddedDBEngine {
 
         return accessMapList;
     }
+
+    public List<Map<String,String>> getContactList(String queryString) {
+        List<Map<String,String>> accessMapList = null;
+        try {
+
+            accessMapList = new ArrayList<>();
+
+            Type type = new TypeToken<Map<String, String>>(){}.getType();
+
+            //String queryString = null;
+
+            //fill in the query
+            //queryString = "SELECT * FROM accesslog";
+
+            try(Connection conn = ds.getConnection()) {
+                try (Statement stmt = conn.createStatement()) {
+
+                    try(ResultSet rs = stmt.executeQuery(queryString)) {
+
+                        while (rs.next()) {
+                            Map<String, String> accessMap = new HashMap<>();
+                            //accessMap.put("patient_mrn", rs.getString("patient_mrn")); // remove this later
+                            accessMap.put("contact_mrn", rs.getString("contact_mrn"));
+                            accessMapList.add(accessMap);
+                        }
+
+                    }
+                }
+            }
+
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        List<Map<String, String>> accessMapListUnique = accessMapList.stream().distinct().collect(Collectors.toList());
+        System.out.println("accessMapList: " + accessMapList);
+        System.out.println("accessMapListUnique: " + accessMapListUnique);
+        return accessMapList;
+    }
+
 }
