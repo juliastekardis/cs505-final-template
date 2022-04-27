@@ -225,6 +225,8 @@ public class API {
             List<Map<String,String>> accessMapList = Launcher.embeddedEngine.getContactList(queryString);
             //generate a response
             responseString = gson.toJson(accessMapList);
+            responseString = responseString.replace("{\"contact_mrn\":", "").replace("}", "");
+            responseString = "{\"contactList\":" + responseString + "}";
             //Map<String,Integer> responseMap = new HashMap<>();
             //responseMap.put("state_status",Launcher.state_status);
             //responseString = gson.toJson(responseMap);

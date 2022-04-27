@@ -166,7 +166,7 @@ public class EmbeddedDBEngine {
 
     public int executeUpdate(String stmtString) {
         int result = -1;
-        System.out.println(stmtString);
+        //System.out.println(stmtString);
         try {
             Connection conn = ds.getConnection();
             try {
@@ -344,9 +344,9 @@ public class EmbeddedDBEngine {
             ex.printStackTrace();
         }
         List<Map<String, String>> accessMapListUnique = accessMapList.stream().distinct().collect(Collectors.toList());
-        System.out.println("accessMapList: " + accessMapList);
-        System.out.println("accessMapListUnique: " + accessMapListUnique);
-        return accessMapList;
+        //System.out.println("accessMapList: " + accessMapList);
+        //System.out.println("accessMapListUnique: " + accessMapListUnique);
+        return accessMapListUnique;
     }
 
 }

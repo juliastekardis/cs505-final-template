@@ -94,6 +94,9 @@ public class TopicConnector {
                         "   LIMIT 1";*/
                         String insertQuery = "INSERT INTO contacts (patient_mrn, contact_mrn) VALUES ('" + testingData.patient_mrn + "', '" + contact + "')"; 
                         Launcher.embeddedEngine.executeUpdate(insertQuery);
+
+                        insertQuery = "INSERT INTO contacts (patient_mrn, contact_mrn) VALUES ('" + contact + "', '" + testingData.patient_mrn + "')"; 
+                        Launcher.embeddedEngine.executeUpdate(insertQuery);
                     }
                 }
 
