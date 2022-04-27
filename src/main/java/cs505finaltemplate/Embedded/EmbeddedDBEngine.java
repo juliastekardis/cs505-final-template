@@ -153,6 +153,22 @@ public class EmbeddedDBEngine {
         } catch(Exception ex) {
             ex.printStackTrace();
         }
+
+        createRNode = "CREATE TABLE patient_events" +
+                "(" +
+                "   patient_mrn varchar(255), " +
+                "   event_id varchar(255)" +
+                ")";
+
+        try {
+            try(Connection conn = ds.getConnection()) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate(createRNode);
+                }
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     void delete(File f) throws IOException {

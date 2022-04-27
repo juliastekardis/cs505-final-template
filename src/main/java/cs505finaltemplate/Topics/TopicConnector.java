@@ -88,14 +88,15 @@ public class TopicConnector {
 
                     //do something else with each record
                     for (String contact : testingData.contact_list) {
-                        /*String insertQuery = "INSERT INTO contacts (patient_mrn, contact_mrn) " +
-                        "   SELECT * FROM (SELECT \"" + testingData.patient_mrn + "\" AS patient_mrn, \"" + contact + "\" AS contact_mrn " +
-                        "   WHERE NOT EXISTS ( SELECT * FROM contacts WHERE patient_mrn = " + testingData.patient_mrn + " AND contact_mrn = " + contact + ")" +
-                        "   LIMIT 1";*/
                         String insertQuery = "INSERT INTO contacts (patient_mrn, contact_mrn) VALUES ('" + testingData.patient_mrn + "', '" + contact + "')"; 
                         Launcher.embeddedEngine.executeUpdate(insertQuery);
 
                         insertQuery = "INSERT INTO contacts (patient_mrn, contact_mrn) VALUES ('" + contact + "', '" + testingData.patient_mrn + "')"; 
+                        Launcher.embeddedEngine.executeUpdate(insertQuery);
+                    }
+
+                    for (String event_id : testingData.event_list) {
+                        String insertQuery = "INSERT INTO patient_events (patient_mrn, event_id) VALUES ('" + testingData.patient_mrn + "', '" + event_id + "')"; 
                         Launcher.embeddedEngine.executeUpdate(insertQuery);
                     }
                 }
