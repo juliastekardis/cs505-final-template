@@ -87,6 +87,19 @@ public class TopicConnector {
                     Launcher.cepEngine.input("testInStream",testInput);
 
                     //do something else with each record
+                    for (String contact : testingData.contact_list) {
+                        String insertQuery = "INSERT INTO contacts (patient_mrn, contact_mrn) VALUES ('" + testingData.patient_mrn + "', '" + contact + "')"; 
+                        Launcher.embeddedEngine.executeUpdate(insertQuery);
+
+                        insertQuery = "INSERT INTO contacts (patient_mrn, contact_mrn) VALUES ('" + contact + "', '" + testingData.patient_mrn + "')"; 
+                        Launcher.embeddedEngine.executeUpdate(insertQuery);
+                    }
+
+                    // using for CT 2
+                    for (String event_id : testingData.event_list) {
+                        String insertQuery = "INSERT INTO patient_events (patient_mrn, event_id) VALUES ('" + testingData.patient_mrn + "', '" + event_id + "')"; 
+                        Launcher.embeddedEngine.executeUpdate(insertQuery);
+                    }
                 }
 
             };

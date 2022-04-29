@@ -212,4 +212,59 @@ public class API {
         responseString = responseString.replace("},{", ",");
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
+
+    @GET
+    @Path("/getconfirmedcontacts/{mrn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConfirmedContacts(@PathParam("mrn") String patient_mrn) {
+        
+        String responseString = "{}";
+        String queryString = "SELECT contact_mrn FROM contacts WHERE patient_mrn = '" + patient_mrn + "'";
+        
+        try {
+            List<Map<String,String>> accessMapList = Launcher.embeddedEngine.getContactList(queryString);
+            //generate a response
+            responseString = gson.toJson(accessMapList);
+            responseString = responseString.replace("{\"contact_mrn\":", "").replace("}", "");
+            responseString = "{\"contactList\":" + responseString + "}";
+        } catch (Exception ex) {
+
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/getpossiblecontacts/{mrn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPossibleContacts(@PathParam("mrn") String patient_mrn) {
+        
+        String responseString = "{}";
+        String queryString = "SELECT A.patient_mrn, B.event_id FROM patient_events A " +
+        "   INNER JOIN (SELECT event_id from patient_events WHERE patient_mrn = '" + patient_mrn + "') B " +
+        "   ON A.event_id = B.event_id " +
+        "   WHERE patient_mrn != '" + patient_mrn + "'"; // add where statement for own patient_mrn
+        
+        try {
+            Map<String,List> contactList = Launcher.embeddedEngine.getEventContacts(queryString);
+            //generate a response
+            responseString = gson.toJson(contactList);
+            responseString = "{ \"contactList\": " + responseString.replace("{", "[").replace("}", "]") + " }";
+        } catch (Exception ex) {
+
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
 }

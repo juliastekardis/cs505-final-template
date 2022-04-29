@@ -23,7 +23,7 @@ public class GraphDBEngine {
         //see class notes for how to use the dashboard
 
 
-        OrientDB orient = new OrientDB("remote:localhost", OrientDBConfig.defaultConfig());
+        OrientDB orient = new OrientDB("remote:jmst323.cs.uky.edu", OrientDBConfig.defaultConfig());
         ODatabaseSession db = orient.open("test", "root", "rootpwd");
 
         clearDB(db);
