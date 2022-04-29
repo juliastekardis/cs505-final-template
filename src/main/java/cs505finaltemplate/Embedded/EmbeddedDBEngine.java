@@ -335,11 +335,6 @@ public class EmbeddedDBEngine {
 
             Type type = new TypeToken<Map<String, String>>(){}.getType();
 
-            //String queryString = null;
-
-            //fill in the query
-            //queryString = "SELECT * FROM accesslog";
-
             try(Connection conn = ds.getConnection()) {
                 try (Statement stmt = conn.createStatement()) {
 
@@ -360,8 +355,6 @@ public class EmbeddedDBEngine {
             ex.printStackTrace();
         }
         List<Map<String, String>> accessMapListUnique = accessMapList.stream().distinct().collect(Collectors.toList());
-        //System.out.println("accessMapList: " + accessMapList);
-        //System.out.println("accessMapListUnique: " + accessMapListUnique);
         return accessMapListUnique;
     }
 
@@ -372,11 +365,6 @@ public class EmbeddedDBEngine {
 
             Type type = new TypeToken<Map<String, String>>(){}.getType();
 
-            //String queryString = null;
-
-            //fill in the query
-            //queryString = "SELECT * FROM accesslog";
-
             try(Connection conn = ds.getConnection()) {
                 try (Statement stmt = conn.createStatement()) {
 
@@ -384,7 +372,6 @@ public class EmbeddedDBEngine {
 
                         while (rs.next()) {
                             Map<String, String> accessMap = new HashMap<>();
-                            //accessMap.put("patient_mrn", rs.getString("patient_mrn")); // remove this later
                             accessMap.put("event_id", rs.getString("event_id"));
                             accessMap.put("patient_mrn", rs.getString("patient_mrn"));
                             accessMapList.add(accessMap);
@@ -398,8 +385,6 @@ public class EmbeddedDBEngine {
             ex.printStackTrace();
         }
         List<Map<String, String>> accessMapListUnique = accessMapList.stream().distinct().collect(Collectors.toList());
-        //System.out.println("accessMapList: " + accessMapList);
-        //System.out.println();
         Map<String,List> contactList = new HashMap<>();
         for (Map<String,String> i : accessMapListUnique) {
             if (!contactList.containsKey(i.get("event_id"))) {
@@ -407,8 +392,6 @@ public class EmbeddedDBEngine {
             }
             contactList.get(i.get("event_id")).add(i.get("patient_mrn"));
         }
-        //System.out.println("contactList: " + contactList);
-        //return accessMapListUnique;
         return contactList;
     }
 }

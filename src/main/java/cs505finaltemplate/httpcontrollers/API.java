@@ -227,10 +227,6 @@ public class API {
             responseString = gson.toJson(accessMapList);
             responseString = responseString.replace("{\"contact_mrn\":", "").replace("}", "");
             responseString = "{\"contactList\":" + responseString + "}";
-            //Map<String,Integer> responseMap = new HashMap<>();
-            //responseMap.put("state_status",Launcher.state_status);
-            //responseString = gson.toJson(responseMap);
-
         } catch (Exception ex) {
 
             StringWriter sw = new StringWriter();
@@ -259,13 +255,6 @@ public class API {
             //generate a response
             responseString = gson.toJson(contactList);
             responseString = "{ \"contactList\": " + responseString.replace("{", "[").replace("}", "]") + " }";
-            //System.out.println("responseString: " + responseString);
-            //responseString = responseString.replace("{\"contact_mrn\":", "").replace("}", "");
-            //responseString = "{\"contactList\":" + responseString + "}";
-            //Map<String,Integer> responseMap = new HashMap<>();
-            //responseMap.put("state_status",Launcher.state_status);
-            //responseString = gson.toJson(responseMap);
-
         } catch (Exception ex) {
 
             StringWriter sw = new StringWriter();
