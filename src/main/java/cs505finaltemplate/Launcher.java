@@ -2,7 +2,6 @@ package cs505finaltemplate;
 
 import cs505finaltemplate.CEP.CEPEngine;
 import cs505finaltemplate.Topics.TopicConnector;
-import cs505finaltemplate.graphDB.GraphDBEngine;
 import cs505finaltemplate.Embedded.EmbeddedDBEngine;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -17,13 +16,11 @@ import java.util.*;
 
 
 public class Launcher {
-
-    public static GraphDBEngine graphDBEngine;
     public static String inputStreamName;
     public static CEPEngine cepEngine;
     public static EmbeddedDBEngine embeddedEngine;
     public static TopicConnector topicConnector;
-    public static final int WEB_PORT = 8082;
+    public static final int WEB_PORT = 9000;
 
     public static String lastCEPOutput = "{}";
     public static HashMap<String, Integer> counts_current_cep = new HashMap<>();
@@ -38,7 +35,6 @@ public class Launcher {
         //startig DB/CEP init
 
         //READ CLASS COMMENTS BEFORE USING
-        //graphDBEngine = new GraphDBEngine();
 
         embeddedEngine = new EmbeddedDBEngine();
 
@@ -100,6 +96,7 @@ public class Launcher {
         try {
             httpServer.start();
             System.out.println("Web Server Started...");
+            state_status = 0;
         } catch (IOException e) {
             e.printStackTrace();
         }

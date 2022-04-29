@@ -36,11 +36,10 @@ public class API {
     public Response getteam() {
         String responseString = "{}";
         try {
-            System.out.println("WHAT");
             Map<String,String> responseMap = new HashMap<>();
             responseMap.put("team_name", "Julia's Team");
             responseMap.put("Team_members_sids", "[12229023]");
-            responseMap.put("app_status_code","0");
+            responseMap.put("app_status_code","1");
 
             responseString = gson.toJson(responseMap);
 
@@ -254,7 +253,7 @@ public class API {
             Map<String,List> contactList = Launcher.embeddedEngine.getEventContacts(queryString);
             //generate a response
             responseString = gson.toJson(contactList);
-            responseString = "{ \"contactList\": " + responseString.replace("{", "[").replace("}", "]") + " }";
+            responseString = "{\"contactList\": " + responseString.replace("{", "[").replace("}", "]") + "}";
         } catch (Exception ex) {
 
             StringWriter sw = new StringWriter();

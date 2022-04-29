@@ -80,7 +80,9 @@ public class TopicConnector {
 
                     //Data to send to CEP
                     Map<String,String> zip_entry = new HashMap<>();
-                    zip_entry.put("zip_code",String.valueOf(testingData.patient_zipcode));
+                    if (testingData.patient_status == 1) {
+                        zip_entry.put("zip_code",String.valueOf(testingData.patient_zipcode));
+                    }
                     String testInput = gson.toJson(zip_entry);
 
                     //insert into CEP
