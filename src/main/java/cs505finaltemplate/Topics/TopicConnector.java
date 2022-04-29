@@ -73,8 +73,6 @@ public class TopicConnector {
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
                 String message = new String(delivery.getBody(), "UTF-8");
-
-
                 List<TestingData> incomingList = gson.fromJson(message, typeListTestingData);
                 for (TestingData testingData : incomingList) {
 

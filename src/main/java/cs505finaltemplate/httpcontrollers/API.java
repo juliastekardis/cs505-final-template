@@ -280,7 +280,7 @@ public class API {
             System.out.println("Clearing 'zipList'...");
             Launcher.zipList.clear();
             Map<String,Integer> responseMap = new HashMap<>();
-            responseMap.put("reset_status_code", 0);
+            responseMap.put("reset_status_code", 1);
 
             responseString = gson.toJson(responseMap);
             System.out.println("Successfully reset all data..");
@@ -288,7 +288,7 @@ public class API {
         } catch (Exception ex) {
 
             Map<String,Integer> responseMap = new HashMap<>();
-            responseMap.put("reset_status_code", 1);
+            responseMap.put("reset_status_code", 0);
 
             responseString = gson.toJson(responseMap);
         }
