@@ -104,6 +104,7 @@ public class EmbeddedDBEngine {
     }
 
     public void initDB() {
+        System.out.println("Initializing embedded database...");
 
         String createRNode = "CREATE TABLE hospital_data" +
                 "(" +
@@ -202,20 +203,34 @@ public class EmbeddedDBEngine {
         return  result;
     }
 
-    public int dropTable(String tableName) {
+    public int dropTables() {
+        List<String> tableNames = new ArrayList<String>();
+        tableNames.add("hospital_data");
+        tableNames.add("vax_data");
+        tableNames.add("contacts");
+        tableNames.add("patient_events");
         int result = -1;
         try {
             Connection conn = ds.getConnection();
             try {
                 String stmtString = null;
+                for (String tableName : tableNames) {
+                    try {
+                        stmtString = "DROP TABLE " + tableName;
 
-                stmtString = "DROP TABLE " + tableName;
+                        Statement stmt = conn.createStatement();
 
-                Statement stmt = conn.createStatement();
+                        result = stmt.executeUpdate(stmtString);
 
-                result = stmt.executeUpdate(stmtString);
+                        stmt.close();
+                        System.out.println("Successfully dropped table '" + tableName + "'");
+                    } catch(Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    
+                }
 
-                stmt.close();
+                
             } catch (Exception e) {
 
                 e.printStackTrace();

@@ -267,4 +267,33 @@ public class API {
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
 
+    @GET
+    @Path("/reset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response reset() {
+        String responseString = "{}";
+        try {
+            int droppedTables = Launcher.embeddedEngine.dropTables();
+            if (droppedTables != -1) {
+                Launcher.embeddedEngine.initDB();
+                System.out.println("Embedded database re-initialized!");
+            }
+            System.out.println("Clearing 'zipList'...");
+            Launcher.zipList.clear();
+            Map<String,Integer> responseMap = new HashMap<>();
+            responseMap.put("reset_status_code", 0);
+
+            responseString = gson.toJson(responseMap);
+            System.out.println("Successfully reset all data..");
+
+        } catch (Exception ex) {
+
+            Map<String,Integer> responseMap = new HashMap<>();
+            responseMap.put("reset_status_code", 1);
+
+            responseString = gson.toJson(responseMap);
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
 }
