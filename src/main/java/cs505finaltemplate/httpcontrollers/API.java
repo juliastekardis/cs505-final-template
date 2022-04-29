@@ -242,4 +242,40 @@ public class API {
         }
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
+
+    @GET
+    @Path("/getpossiblecontacts/{mrn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPossibleContacts(@PathParam("mrn") String patient_mrn) {
+        
+        String responseString = "{}";
+        String queryString = "SELECT A.patient_mrn, B.event_id FROM patient_events A " +
+        "   INNER JOIN (SELECT event_id from patient_events WHERE patient_mrn = '" + patient_mrn + "') B " +
+        "   ON A.event_id = B.event_id " +
+        "   WHERE patient_mrn != '" + patient_mrn + "'"; // add where statement for own patient_mrn
+        
+        try {
+            Map<String,List> contactList = Launcher.embeddedEngine.getEventContacts(queryString);
+            //generate a response
+            responseString = gson.toJson(contactList);
+            responseString = "{ \"contactList\": " + responseString.replace("{", "[").replace("}", "]") + " }";
+            //System.out.println("responseString: " + responseString);
+            //responseString = responseString.replace("{\"contact_mrn\":", "").replace("}", "");
+            //responseString = "{\"contactList\":" + responseString + "}";
+            //Map<String,Integer> responseMap = new HashMap<>();
+            //responseMap.put("state_status",Launcher.state_status);
+            //responseString = gson.toJson(responseMap);
+
+        } catch (Exception ex) {
+
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
 }

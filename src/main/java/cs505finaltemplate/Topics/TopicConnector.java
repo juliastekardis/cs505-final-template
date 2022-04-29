@@ -95,6 +95,7 @@ public class TopicConnector {
                         Launcher.embeddedEngine.executeUpdate(insertQuery);
                     }
 
+                    // using for CT 2
                     for (String event_id : testingData.event_list) {
                         String insertQuery = "INSERT INTO patient_events (patient_mrn, event_id) VALUES ('" + testingData.patient_mrn + "', '" + event_id + "')"; 
                         Launcher.embeddedEngine.executeUpdate(insertQuery);
